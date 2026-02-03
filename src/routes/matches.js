@@ -59,7 +59,19 @@ matchesRouter.post("/", async (req, res) => {
         }).returning();
 
         if(!event) {
+            console.error("Failed to create match ... ");
             return res.status(500).json({ error: "Failed to create match" });
+        }
+
+
+        try {
+
+            if(res.app.locals.broadcastMatchCreated) {
+                res.app.locals.broadcastMatchCreated(event);
+            }
+            
+        } catch (error) {
+            console.error("Failed to broadcast match_created", error);
         }
 
         return res.status(201).json({ message: "Match Created", data: event });
