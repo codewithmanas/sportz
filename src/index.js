@@ -3,7 +3,8 @@ import express from "express";
 import http from "node:http";
 import { attachWebSocketServer } from "./ws/server.js";
 
-const PORT = Number(process.env.PORT || 8000);
+const parsedPort = Number(process.env.PORT);
+const PORT = Number.isFinite(parsedPort) ? parsedPort : 8000;
 const HOST = process.env.HOST || "0.0.0.0";
 
 const app = express();

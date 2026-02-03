@@ -27,6 +27,10 @@ export function attachWebSocketServer(server) {
         maxPayload: 1024 * 1024
     })
 
+    wss.on("error", (error) => {
+        console.error("WebSocket server error", error);
+    });
+
     wss.on("connection", (socket) => {
         sendJson(socket, { type: "welcome" });
 
