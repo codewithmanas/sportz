@@ -6,8 +6,7 @@ if (!arcjetKey) {
     throw new Error("ARCJET_KEY is not set in the .env file");
 }
 
-export const httpArcjet = arcjetKey ? 
-    arcjet({
+export const httpArcjet = arcjet({
         key: arcjetKey,
         rules: [
             shield({ mode: arcjetMode }),
@@ -17,10 +16,9 @@ export const httpArcjet = arcjetKey ?
             }),
             slidingWindow({ mode: arcjetMode, interval: 10, max: 50 })
         ]
-    }) : null;
+    });
 
-export const wsArcjet = arcjetKey ? 
-    arcjet({
+export const wsArcjet = arcjet({
         key: arcjetKey,
         rules: [
             shield({ mode: arcjetMode }),
@@ -28,9 +26,9 @@ export const wsArcjet = arcjetKey ?
                 mode: arcjetMode,
                 allow: ["CATEGORY:SEARCH_ENGINE", "CATEGORY:PREVIEW"]
             }),
-            slidingWindow({ mode: arcjetMode, interval: 2, max: 5 })
+            slidingWindow({ mode: arcjetMode, interval: 5, max: 10 })
         ]
-    }) : null;
+    });
 
 
 export function securityMiddleware() {
