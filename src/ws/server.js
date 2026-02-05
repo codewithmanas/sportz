@@ -24,7 +24,6 @@ export function attachWebSocketServer(server) {
 
     const wss = new WebSocketServer({
         noServer: true,
-        path: "/ws",
         maxPayload: 1024 * 1024
     })
 
@@ -33,6 +32,8 @@ export function attachWebSocketServer(server) {
         const { pathname } = new URL(req.url, `http://${req.headers.host}`);
 
         if(pathname !== "/ws") {
+            socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
+            socket.destroy();
             return;
         }
 
@@ -54,7 +55,7 @@ export function attachWebSocketServer(server) {
                 }
                 
             } catch (error) {
-                console.error('WS upgrade protection error', e);
+                console.error('WS upgrade protection error', error);
                 socket.write('HTTP/1.1 500 Internal Server Error\r\n\r\n');
                 socket.destroy();
                 return;
@@ -85,7 +86,10 @@ export function attachWebSocketServer(server) {
 
     const interval = setInterval(() => {
         wss.clients.forEach((ws) => {
-            if (ws.isAlive === false) return ws.terminate();
+            if (ws.isAlive === false) {
+                ws.terminate();
+                return;
+            }
 
             ws.isAlive = false;
             ws.ping();
