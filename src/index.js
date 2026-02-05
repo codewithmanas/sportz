@@ -1,8 +1,9 @@
-import { matchesRouter } from "./routes/matches.js";
-import express from "express";
 import http from "node:http";
+import express from "express";
 import { attachWebSocketServer } from "./ws/server.js";
 import { securityMiddleware } from "./arcjet.js";
+import { matchesRouter } from "./routes/matches.js";
+import { commentaryRouter } from "./routes/commentary.js";
 
 const parsedPort = Number(process.env.PORT);
 const PORT = Number.isFinite(parsedPort) ? parsedPort : 8000;
@@ -23,6 +24,7 @@ app.use(securityMiddleware());
 
 // Routes
 app.use("/api/matches", matchesRouter);
+app.use("/api/matches/:id/commentary", commentaryRouter);
 
 const { broadcastMatchCreated } = attachWebSocketServer(server);
 app.locals.broadcastMatchCreated = broadcastMatchCreated;
