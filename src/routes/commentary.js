@@ -58,9 +58,6 @@ commentaryRouter.post("/", async (req, res) => {
 
     const paramsParsed = matchIdParamSchema.safeParse(req.params);
 
-    console.log("req.params: ", req.params);
-    console.log("paramsParsed: ", paramsParsed);
-
     if(!paramsParsed.success) {
         return res.status(400).json({ error: "Invalid Match Id", details: paramsParsed.error.issues });
     }
@@ -82,6 +79,10 @@ commentaryRouter.post("/", async (req, res) => {
         if (!result) {
             console.error("Failed to create commentary");
             return res.status(500).json({ error: "Failed to create commentary" });
+        }
+
+        if(res.app.locals.broadcastCommentary) {
+            res.app.locals.broadcastCommentary(result.matchId, result);
         }
 
         return res.status(200).json({ data: result });
