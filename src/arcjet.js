@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import arcjet, { detectBot, shield, slidingWindow } from "@arcjet/node";
 
 const arcjetKey = process.env.ARCJET_KEY;
